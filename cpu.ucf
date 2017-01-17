@@ -1,0 +1,39 @@
+NET "buttons[1]" LOC = P8;
+NET "buttons[0]" LOC = P9;
+NET "io_inputs[15]" LOC = L14;
+NET "io_inputs[14]" LOC = L13;
+NET "io_inputs[13]" LOC = K14;
+NET "io_inputs[12]" LOC = K13;
+NET "io_inputs[11]" LOC = J14;
+NET "io_inputs[10]" LOC = J13;
+NET "io_inputs[9]" LOC = H14;
+NET "io_inputs[8]" LOC = H13;
+NET "io_inputs[7]" LOC = F14;
+NET "io_inputs[6]" LOC = F13;
+NET "io_inputs[5]" LOC = G14;
+NET "io_inputs[4]" LOC = G13;
+NET "io_inputs[3]" LOC = E14;
+NET "io_inputs[2]" LOC = E13;
+NET "leds[3]" LOC = P4;
+NET "leds[2]" LOC = N4;
+NET "leds[1]" LOC = P3;
+NET "leds[0]" LOC = N3;
+
+
+NET "io_outputs[15]" LOC = M2;
+NET "io_outputs[14]" LOC = M1;
+NET "io_outputs[13]" LOC = L2;
+NET "io_outputs[12]" LOC = L1;
+NET "io_outputs[11]" LOC = K2;
+NET "io_outputs[10]" LOC = K1;
+NET "io_outputs[9]" LOC = J2;
+NET "io_outputs[8]" LOC = J1;
+NET "io_outputs[7]" LOC = G2;
+NET "io_outputs[6]" LOC = G1;
+NET "io_outputs[5]" LOC = H2;
+NET "io_outputs[4]" LOC = H1;
+NET "reset_in" LOC = F2;
+
+# PlanAhead Generated physical constraints 
+
+NET "clk_in" LOC = N8;
