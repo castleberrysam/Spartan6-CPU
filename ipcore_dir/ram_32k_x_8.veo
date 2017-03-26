@@ -47,17 +47,17 @@
 // (in parentheses) to your own signal names.
 
 //----------- Begin Cut here for INSTANTIATION Template ---// INST_TAG
-ram_4k_x_16 your_instance_name (
+ram_32k_x_8 your_instance_name (
   .clka(clka), // input clka
   .wea(wea), // input [0 : 0] wea
-  .addra(addra), // input [11 : 0] addra
-  .dina(dina), // input [15 : 0] dina
-  .douta(douta) // output [15 : 0] douta
+  .addra(addra), // input [14 : 0] addra
+  .dina(dina), // input [7 : 0] dina
+  .douta(douta) // output [7 : 0] douta
 );
 // INST_TAG_END ------ End INSTANTIATION Template ---------
 
-// You must compile the wrapper file ram_4k_x_16.v when simulating
-// the core, ram_4k_x_16. When compiling the wrapper file, be sure to
+// You must compile the wrapper file ram_32k_x_8.v when simulating
+// the core, ram_32k_x_8. When compiling the wrapper file, be sure to
 // reference the XilinxCoreLib Verilog simulation library. For detailed
 // instructions, please refer to the "CORE Generator Help".
 

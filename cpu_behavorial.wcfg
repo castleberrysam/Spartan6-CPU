@@ -3,16 +3,16 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="/home/sam/xilinx/workspace/Project/test_cpu_isim_beh.wdb" id="1" type="auto">
+      <db_ref path="/home/sam/Desktop/spartan6-cpu/test_cpu_isim_beh.wdb" id="1" type="auto">
          <top_modules>
             <top_module name="glbl" />
             <top_module name="test_cpu" />
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="32" />
-   <wvobject fp_name="divider76" type="divider">
-      <obj_property name="label">Clocks and Resets</obj_property>
+   <WVObjectSize size="33" />
+   <wvobject fp_name="divider35" type="divider">
+      <obj_property name="label">Clocks</obj_property>
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="BkColor">128 128 255</obj_property>
       <obj_property name="TextColor">230 230 230</obj_property>
@@ -21,16 +21,12 @@
       <obj_property name="ElementShortName">reset</obj_property>
       <obj_property name="ObjectShortName">reset</obj_property>
    </wvobject>
-   <wvobject fp_name="/test_cpu/uut/clk1" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">clk1</obj_property>
-      <obj_property name="ObjectShortName">clk1</obj_property>
-   </wvobject>
    <wvobject fp_name="/test_cpu/uut/clk4" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">clk4</obj_property>
       <obj_property name="ObjectShortName">clk4</obj_property>
    </wvobject>
-   <wvobject fp_name="divider41" type="divider">
-      <obj_property name="label">Memory</obj_property>
+   <wvobject fp_name="divider36" type="divider">
+      <obj_property name="label">Memories</obj_property>
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="BkColor">128 128 255</obj_property>
       <obj_property name="TextColor">230 230 230</obj_property>
@@ -40,18 +36,32 @@
       <obj_property name="ObjectShortName">addr[15:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/test_cpu/uut/data_out" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">data_out[15:0]</obj_property>
-      <obj_property name="ObjectShortName">data_out[15:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_cpu/uut/data_in" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">data_in[15:0]</obj_property>
-      <obj_property name="ObjectShortName">data_in[15:0]</obj_property>
+      <obj_property name="ElementShortName">data_out[7:0]</obj_property>
+      <obj_property name="ObjectShortName">data_out[7:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/test_cpu/uut/data_write_en" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">data_write_en</obj_property>
       <obj_property name="ObjectShortName">data_write_en</obj_property>
    </wvobject>
-   <wvobject fp_name="divider43" type="divider">
+   <wvobject fp_name="/test_cpu/uut/data_in" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">data_in[7:0]</obj_property>
+      <obj_property name="ObjectShortName">data_in[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider37" type="divider">
+      <obj_property name="label">Buses</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="BkColor">128 128 255</obj_property>
+      <obj_property name="TextColor">230 230 230</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_cpu/uut/busa" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">busa[15:0]</obj_property>
+      <obj_property name="ObjectShortName">busa[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_cpu/uut/busb" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">busb[15:0]</obj_property>
+      <obj_property name="ObjectShortName">busb[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider38" type="divider">
       <obj_property name="label">ALU</obj_property>
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="BkColor">128 128 255</obj_property>
@@ -61,11 +71,13 @@
       <obj_property name="ElementShortName">op[2:0]</obj_property>
       <obj_property name="ObjectShortName">op[2:0]</obj_property>
    </wvobject>
+   <wvobject fp_name="/test_cpu/uut/logic_func" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">logic_func[3:0]</obj_property>
+      <obj_property name="ObjectShortName">logic_func[3:0]</obj_property>
+   </wvobject>
    <wvobject fp_name="/test_cpu/uut/alua" type="array" db_ref_id="1">
-      <obj_property name="DisplayName">label</obj_property>
       <obj_property name="ElementShortName">alua[15:0]</obj_property>
       <obj_property name="ObjectShortName">alua[15:0]</obj_property>
-      <obj_property name="label">alua</obj_property>
    </wvobject>
    <wvobject fp_name="/test_cpu/uut/alub" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">alub[15:0]</obj_property>
@@ -79,37 +91,19 @@
       <obj_property name="ElementShortName">alu_out[15:0]</obj_property>
       <obj_property name="ObjectShortName">alu_out[15:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="divider45" type="divider">
-      <obj_property name="label">Instruction Execution</obj_property>
-      <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="BkColor">128 128 255</obj_property>
-      <obj_property name="TextColor">230 230 230</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_cpu/uut/ctl0/insn_cycle" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">insn_cycle[1:0]</obj_property>
-      <obj_property name="ObjectShortName">insn_cycle[1:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_cpu/uut/ctl0/insn" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">insn[15:0]</obj_property>
-      <obj_property name="ObjectShortName">insn[15:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_cpu/uut/ctl0/ctl_out" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">ctl_out[12:0]</obj_property>
-      <obj_property name="ObjectShortName">ctl_out[12:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="divider46" type="divider">
+   <wvobject fp_name="divider39" type="divider">
       <obj_property name="label">Registers</obj_property>
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="BkColor">128 128 255</obj_property>
       <obj_property name="TextColor">230 230 230</obj_property>
    </wvobject>
    <wvobject fp_name="/test_cpu/uut/output_en" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">output_en[23:0]</obj_property>
-      <obj_property name="ObjectShortName">output_en[23:0]</obj_property>
+      <obj_property name="ElementShortName">output_en[47:0]</obj_property>
+      <obj_property name="ObjectShortName">output_en[47:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/test_cpu/uut/write_en" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">write_en[7:0]</obj_property>
-      <obj_property name="ObjectShortName">write_en[7:0]</obj_property>
+      <obj_property name="ElementShortName">write_en[15:0]</obj_property>
+      <obj_property name="ObjectShortName">write_en[15:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/test_cpu/uut/reg_in" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">reg_in[15:0]</obj_property>
@@ -119,54 +113,58 @@
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="ElementShortName">value[15:0]</obj_property>
       <obj_property name="ObjectShortName">value[15:0]</obj_property>
-      <obj_property name="label">PC</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      <obj_property name="label">r0</obj_property>
    </wvobject>
    <wvobject fp_name="/test_cpu/uut/\cpu_regs[1].register /value" type="array" db_ref_id="1">
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="ElementShortName">value[15:0]</obj_property>
       <obj_property name="ObjectShortName">value[15:0]</obj_property>
-      <obj_property name="label">SP</obj_property>
+      <obj_property name="label">r1</obj_property>
    </wvobject>
    <wvobject fp_name="/test_cpu/uut/\cpu_regs[2].register /value" type="array" db_ref_id="1">
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="ElementShortName">value[15:0]</obj_property>
       <obj_property name="ObjectShortName">value[15:0]</obj_property>
-      <obj_property name="label">FP</obj_property>
+      <obj_property name="label">r2</obj_property>
    </wvobject>
    <wvobject fp_name="/test_cpu/uut/\cpu_regs[3].register /value" type="array" db_ref_id="1">
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="ElementShortName">value[15:0]</obj_property>
       <obj_property name="ObjectShortName">value[15:0]</obj_property>
-      <obj_property name="label">AX</obj_property>
+      <obj_property name="label">r3</obj_property>
    </wvobject>
    <wvobject fp_name="/test_cpu/uut/\cpu_regs[4].register /value" type="array" db_ref_id="1">
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="ElementShortName">value[15:0]</obj_property>
       <obj_property name="ObjectShortName">value[15:0]</obj_property>
-      <obj_property name="label">BX</obj_property>
+      <obj_property name="label">r4</obj_property>
    </wvobject>
    <wvobject fp_name="/test_cpu/uut/\cpu_regs[5].register /value" type="array" db_ref_id="1">
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="ElementShortName">value[15:0]</obj_property>
       <obj_property name="ObjectShortName">value[15:0]</obj_property>
-      <obj_property name="label">CX</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      <obj_property name="label">r5</obj_property>
    </wvobject>
-   <wvobject fp_name="/test_cpu/uut/\cpu_regs[6].register /value" type="array" db_ref_id="1">
+   <wvobject fp_name="divider40" type="divider">
+      <obj_property name="label">Control Unit</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="ElementShortName">value[15:0]</obj_property>
-      <obj_property name="ObjectShortName">value[15:0]</obj_property>
-      <obj_property name="label">DX</obj_property>
+      <obj_property name="BkColor">128 128 255</obj_property>
+      <obj_property name="TextColor">230 230 230</obj_property>
    </wvobject>
-   <wvobject fp_name="/test_cpu/uut/\cpu_regs[7].register /value" type="array" db_ref_id="1">
-      <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="ElementShortName">value[15:0]</obj_property>
-      <obj_property name="ObjectShortName">value[15:0]</obj_property>
-      <obj_property name="label">EX</obj_property>
+   <wvobject fp_name="/test_cpu/uut/ctl0/insn_cycle" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">insn_cycle[7:0]</obj_property>
+      <obj_property name="ObjectShortName">insn_cycle[7:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/test_cpu/io_outputs" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">io_outputs[15:4]</obj_property>
-      <obj_property name="ObjectShortName">io_outputs[15:4]</obj_property>
+   <wvobject fp_name="/test_cpu/uut/ctl" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">ctl[10:0]</obj_property>
+      <obj_property name="ObjectShortName">ctl[10:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_cpu/uut/imm" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">imm[15:0]</obj_property>
+      <obj_property name="ObjectShortName">imm[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_cpu/uut/imm2" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">imm2[15:0]</obj_property>
+      <obj_property name="ObjectShortName">imm2[15:0]</obj_property>
    </wvobject>
 </wave_config>

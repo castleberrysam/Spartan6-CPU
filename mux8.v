@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date:    11:27:38 12/25/2016 
+// Create Date:    14:55:23 03/19/2017 
 // Design Name: 
-// Module Name:    mux16 
+// Module Name:    mux8 
 // Project Name: 
 // Target Devices: 
 // Tool versions: 
@@ -18,18 +18,13 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module mux16(
-    output [15:0] out,
+module mux8(
+    output [7:0] out,
     input sel,
-    input [15:0] ina,
-    input [15:0] inb
+    input [7:0] ina,
+    input [7:0] inb
     );
-
-    generate
-        genvar i;
-        for(i = 0; i < 16; i = i + 1) begin: muxes
-            mux multiplexer(out[i], sel, ina[i], inb[i]);
-        end
-    endgenerate
-
+    
+    assign out = (sel ? inb : ina);
+    
 endmodule

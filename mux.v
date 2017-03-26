@@ -25,6 +25,6 @@ module mux(
     input inb
     );
 
-	assign out = sel ? inb : ina;
+    assign out = sel ? inb : ina;
 
 endmodule

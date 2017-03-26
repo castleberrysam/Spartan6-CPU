@@ -24,6 +24,6 @@ module tribuf(
     input en
     );
 
-	assign out = en ? in : 1'bz;
+    assign out = en ? in : 1'bz;
 
 endmodule

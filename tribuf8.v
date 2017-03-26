@@ -23,12 +23,12 @@ module tribuf8(
     input [7:0] in,
     input output_en
     );
-	
-	generate
-		genvar i;
-		for(i = 0; i < 8; i = i + 1) begin: tribufs
-			tribuf tbuf(out[i], in[i], output_en);
-		end
-	endgenerate
-	
+
+    generate
+        genvar i;
+        for(i = 0; i < 8; i = i + 1) begin: tribufs
+            tribuf tbuf(out[i], in[i], output_en);
+        end
+    endgenerate
+
 endmodule

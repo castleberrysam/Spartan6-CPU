@@ -19,57 +19,55 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module cpu(
-    output [15:4] io_outputs,
-	 output [3:0] leds,
-	 input [15:2] io_inputs,
-	 input [1:0] buttons,
-	 input clk_in,
-	 input reset_in
-	 );
-	
-	wire reset, clk_valid, clk1, clk4;
-	
-	clock_div_4 clkdiv(clk_in, clk1, clk4, clk_valid);
-	or or0(reset, reset_in, ~clk_valid);
-	
-	wire [15:0] addr, data_in, data_out;
-	wire data_write_en;
-	
-	mem mem0(data_out, {io_outputs, leds}, data_in, {io_inputs, buttons}, addr, data_write_en, clk1, reset);
-	
-	wire [15:0] busa, busb, busc, alua, alub, aluc, alu_out, reg_in, immediate;
-	wire [23:0] output_en;
-	wire [7:0] write_en;
-	wire [12:0] ctl;
-	wire [2:0] op;
-	
-	generate
-		genvar i;
-		for(i = 0; i < 8; i = i + 1) begin: cpu_regs
-			reg16 register(busa, busb, busc, reg_in, output_en[(i*3)+2:(i*3)], write_en[i], clk4, reset);
-		end
-	endgenerate
-	
-	alu alu0(alu_out, op, alua, alub, aluc);
-	cpu_ctl ctl0(data_write_en, op, ctl, immediate, write_en, output_en, reg_in, clk4, reset);
-	tribuf16
-		tbuf0(alua, busa, ctl[0]),
-		tbuf1(alub, busb, ctl[1]),
-		tbuf2(alub, immediate, ctl[2]),
-		tbuf3(aluc, busc, ctl[3]),
-		
-		tbuf4(reg_in, data_out, ctl[4]),
-		tbuf5(reg_in, alu_out, ctl[5]),
-		
-		tbuf6(addr, alu_out, ctl[6]),
-		tbuf7(addr, busa, ctl[7]),
-		
-		tbuf8(data_in, busb, ctl[8]);
-	tribuf8
-		tbuf9(reg_in[7:0], immediate[7:0], ctl[9]),
-		tbuf10(reg_in[7:0], busc[7:0], ctl[10]),
-		
-		tbuf11(reg_in[15:8], immediate[7:0], ctl[11]),
-		tbuf12(reg_in[15:8], busc[15:8], ctl[12]);
-	
+    output [31:0] io_outputs,
+    input [31:0] io_inputs,
+    input clk_in,
+    input reset_in
+    );
+
+    wire reset, clk_valid, clk1, clk4;
+
+    clock_div_4 clkdiv(clk_in, clk1, clk4, clk_valid);
+    or or0(reset, reset_in, ~clk_valid);
+
+    wire [15:0] addr;
+    wire [7:0] data_in, data_out;
+    wire data_write_en;
+
+    mem mem0(data_out, io_outputs, data_in, io_inputs, addr, data_write_en, clk1, reset);
+
+    wire [15:0] busa, busb, alua, alub, aluc, alu_out, reg_in, imm, imm2, write_en;
+    wire [47:0] output_en;
+    wire [10:0] ctl;
+    wire [3:0] logic_func;
+    wire [2:0] op;
+
+    generate
+        genvar i;
+        for(i = 0; i < 16; i = i + 1) begin: cpu_regs
+            reg16 register(busa, busb, aluc, reg_in, output_en[(i*3)+2:(i*3)], write_en[i], clk4, reset);
+        end
+    endgenerate
+
+    alu alu0(alu_out, op, logic_func, alua, alub, aluc);
+    cpu_ctl ctl0(data_write_en, op, logic_func, ctl, imm, imm2, write_en, output_en, data_out, clk4, reset);
+    
+    tribuf16
+        tbuf0(alua, busa, ctl[0]),
+        tbuf1(alub, busb, ctl[1]),
+        
+        tbuf2(alub, imm, ctl[2]),
+        tbuf3(alub, imm2, ctl[3]),
+        
+        tbuf4(addr, busa, ctl[4]),
+        tbuf5(addr, alu_out, ctl[5]),
+        
+        tbuf6(reg_in, busb, ctl[6]),
+        tbuf7(reg_in, alu_out, ctl[7]),
+        
+        tbuf8(busb, imm, ctl[8]);
+    tribuf8
+        tbuf9(data_in, busb[7:0], ctl[9]),
+        tbuf10(data_in, busb[15:8], ctl[10]);
+
 endmodule

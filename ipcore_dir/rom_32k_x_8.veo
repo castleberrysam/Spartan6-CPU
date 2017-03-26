@@ -47,15 +47,15 @@
 // (in parentheses) to your own signal names.
 
 //----------- Begin Cut here for INSTANTIATION Template ---// INST_TAG
-rom_8k_x_16 your_instance_name (
+rom_32k_x_8 your_instance_name (
   .clka(clka), // input clka
-  .addra(addra), // input [12 : 0] addra
-  .douta(douta) // output [15 : 0] douta
+  .addra(addra), // input [14 : 0] addra
+  .douta(douta) // output [7 : 0] douta
 );
 // INST_TAG_END ------ End INSTANTIATION Template ---------
 
-// You must compile the wrapper file rom_8k_x_16.v when simulating
-// the core, rom_8k_x_16. When compiling the wrapper file, be sure to
+// You must compile the wrapper file rom_32k_x_8.v when simulating
+// the core, rom_32k_x_8. When compiling the wrapper file, be sure to
 // reference the XilinxCoreLib Verilog simulation library. For detailed
 // instructions, please refer to the "CORE Generator Help".
 

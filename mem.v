@@ -19,41 +19,48 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module mem(
-    output reg [15:0] data_out,
-	 output reg [15:0] io_outputs,
-    input [15:0] data_in,
-	 input [15:0] io_inputs,
+    output reg [7:0] data_out,
+    output reg [31:0] io_outputs,
+    input [7:0] data_in,
+    input [31:0] io_inputs,
     input [15:0] addr,
     input write_en,
     input clk,
-	 input reset
+    input reset
     );
+
+    wire [7:0] rom_out, ram_out, mem_out;
+
+    rom_32k_x_8 rom(clk, addr[14:0], rom_out);
+    ram_32k_x_8 ram(clk, write_en, addr[14:0], data_in, ram_out);
+
+    mux8 mux0(mem_out, addr[15], rom_out, ram_out);
+
+    always @(posedge clk or posedge reset) begin
+        if(reset) begin
+            io_outputs = 32'b0;
+        end else if(write_en) case(addr)
+            16'hfff8 : io_outputs[7:0] = data_in;
+            16'hfff9 : io_outputs[15:8] = data_in;
+            16'hfffa : io_outputs[23:16] = data_in;
+            16'hfffb : io_outputs[31:24] = data_in;
+        endcase
+    end
 	
-	wire [15:0] rom_out, ram_out, mem_out;
-	
-	rom_8k_x_16 rom(clk, addr[12:0], rom_out);
-	ram_4k_x_16 ram(clk, write_en, addr[11:0], data_in, ram_out);
-	
-	mux16 mux0(mem_out, &addr[15:12], rom_out, ram_out);
-	
-	always @(posedge clk or posedge reset) begin
-		if(reset) begin
-			io_outputs = 16'b0;
-		end else if(addr == 16'h2001 && write_en) begin
-			io_outputs = data_in;
-		end
-	end
-	
-	always @(negedge clk or posedge reset) begin
-		if(reset) begin
-			data_out = 16'b0;
-		end else if(addr == 16'h2000) begin
-			data_out = io_inputs;
-		end else if(addr == 16'h2001) begin
-			data_out = io_outputs;
-		end else begin
-			data_out = mem_out;
-		end
-	end
-	
+    always @(negedge clk or posedge reset) begin
+        if(reset) begin
+            data_out = 16'b0;
+        end else case(addr)
+            16'hfff8 : data_out = io_outputs[7:0];
+            16'hfff9 : data_out = io_outputs[15:8];
+            16'hfffa : data_out = io_outputs[23:16];
+            16'hfffb : data_out = io_outputs[31:24];
+            16'hfffc : data_out = io_inputs[7:0];
+            16'hfffd : data_out = io_inputs[15:8];
+            16'hfffe : data_out = io_inputs[23:16];
+            16'hffff : data_out = io_inputs[31:24];
+            default  : data_out = mem_out;
+        endcase
+    end
+
 endmodule

@@ -15,9 +15,9 @@ def main():
     inlen = infile.tell()
     infile.seek(0, 0)
 
-    for i in range(inlen >> 1):
-        outfile.write("%4x" % (int.from_bytes(infile.read(2), byteorder='big', signed=False)))
-        if(i == ((inlen >> 1) - 1)):
+    for i in range(inlen):
+        outfile.write("%2x" % (infile.read(1)[0]))
+        if(i == (inlen - 1)):
             outfile.write(";\n")
         else:
             outfile.write(",\n")

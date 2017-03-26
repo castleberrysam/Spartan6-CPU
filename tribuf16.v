@@ -21,14 +21,14 @@
 module tribuf16(
     output [15:0] out,
     input [15:0] in,
-	 input output_en
+    input output_en
     );
 
-	generate
-		genvar i;
-		for(i = 0; i < 16; i = i + 1) begin: tribufs
-			tribuf tbuf(out[i], in[i], output_en);
-		end
-	endgenerate
+    generate
+        genvar i;
+        for(i = 0; i < 16; i = i + 1) begin: tribufs
+            tribuf tbuf(out[i], in[i], output_en);
+        end
+    endgenerate
 
 endmodule
