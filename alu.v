@@ -36,9 +36,9 @@ module alu(
             3'b010 : out = ina - inb;
             3'b011 : out = (ina << inb[3:0]) | (ina >> -inb[3:0]);
             3'b100 : for(i = 0; i < 16; i = i + 1) out[i] = logic_func[{ina[i], inb[i]}];
-            3'b101 : out = (|inc)    ? (ina + 16'b1) : (ina + inb);
-            3'b110 : out = (~|inc)   ? (ina + 16'b1) : (ina + inb);
-            3'b111 : out = (inc[15]) ? (ina + 16'b1) : (ina + inb);
+            3'b101 : out = (|inc)    ? (ina) : (ina + inb);
+            3'b110 : out = (~|inc)   ? (ina) : (ina + inb);
+            3'b111 : out = (inc[15]) ? (ina) : (ina + inb);
         endcase
     end
 
