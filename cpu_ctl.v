@@ -33,6 +33,7 @@ module cpu_ctl(
     );
     
     reg [31:0] insn;
+    reg [15:0] mem_read_scratch;
     reg [7:0] insn_cycle;
     
     assign alu_logic_func = insn[11:8];
@@ -80,6 +81,7 @@ module cpu_ctl(
         if(reset) begin
             insn = 32'b0;
             insn_cycle = 8'b0;
+            mem_read_scratch = 16'b0;
         end else case(insn_cycle)
             8'b00 : begin
                 insn[7:0] = data_in;
@@ -115,8 +117,14 @@ module cpu_ctl(
                     // IMM -> REGIN, write R
                     case(insn_cycle)
                         8'b100  : insn_cycle = 8'b111;
-                        8'b111  : insn_cycle = 8'b1000;
-                        8'b1000 : insn_cycle = 8'b1001;
+                        8'b111  : begin
+                            mem_read_scratch[7:0] = data_in;
+                            insn_cycle = 8'b1000;
+                        end
+                        8'b1000 : begin
+                            mem_read_scratch[15:8] = data_in;
+                            insn_cycle = 8'b1001;
+                        end
                         default : insn_cycle = 8'b00;
                     endcase
                 end
@@ -225,8 +233,14 @@ module cpu_ctl(
                     // IMM -> BUSC -> REGIN, write R1
                     case(insn_cycle)
                         8'b100   : insn_cycle = 8'b10111;
-                        8'b10111 : insn_cycle = 8'b11000;
-                        8'b11000 : insn_cycle = 8'b11001;
+                        8'b10111 : begin
+                            mem_read_scratch[7:0] = data_in;
+                            insn_cycle = 8'b11000;
+                        end
+                        8'b11000 : begin
+                            mem_read_scratch[15:8] = data_in;
+                            insn_cycle = 8'b11001;
+                        end
                         default  : insn_cycle = 8'b00;
                     endcase
                 end
@@ -294,7 +308,6 @@ module cpu_ctl(
                 output_en = 48'b1000;
                 ctl_out = 11'b00010011001;
                 immediate2 = 16'b1;
-                immediate[7:0] = data_in;
             end
             8'b1000 : begin
                 // SP -> BUSA -> ADDR, DATAOUT -> CTLIN, SP -> BUSA -> ALUA, 16'b1 -> ALUB, ALU-OUT -> REG-IN, write SP
@@ -304,13 +317,13 @@ module cpu_ctl(
                 output_en = 48'b1000;
                 ctl_out = 11'b00010011001;
                 immediate2 = 16'b1;
-                immediate[15:8] = data_in;
             end
             8'b1001 : begin
                 // IMM -> REGIN, write R
                 write_en = reg_1;
                 data_write_en = 1'b0;
                 ctl_out = 11'b00101000000;
+                immediate = mem_read_scratch;
             end
             8'b1010 : begin
                 // R1 -> BUSA -> ALUA, R2 -> BUSB -> ALUB, ALUOUT -> REGIN, write R1
@@ -433,7 +446,6 @@ module cpu_ctl(
                 output_en = out_3;
                 ctl_out = 11'b00000101001;
                 immediate2 = insn[31:16];
-                immediate[7:0] = data_in;
             end
             8'b11000 : begin
                 // R2 -> BUSA -> ALUA, IMM -> ALUB, ALUOUT -> ADDR, DATAOUT -> CTLIN
@@ -443,13 +455,13 @@ module cpu_ctl(
                 output_en = out_3;
                 ctl_out = 11'b00000101001;
                 immediate2 = insn[31:16];
-                immediate[15:8] = data_in;
             end
             8'b11001 : begin
                 // IMM -> BUSB -> REGIN, write R1
                 write_en = reg_2;
                 data_write_en = 1'b0;
                 ctl_out = 11'b00101000000;
+                immediate = mem_read_scratch;
             end
             8'b11010 : begin
                 // R1 -> BUSA -> ALUA, IMM -> ALUB, ALUOUT -> ADDR, R2 -> BUSB [7:0]-> DATAIN, write data
