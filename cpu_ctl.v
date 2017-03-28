@@ -185,9 +185,9 @@ module cpu_ctl(
                     endcase
                 end
                 4'b1001 : begin
-                    // PUSH C
-                    // SP -> BUSA -> ADDR, IMM -> BUSB [15:8]-> DATAIN, write data, SP -> BUSA -> ALUA, 16'hffff -> ALUB, ALU-OUT -> REG-IN, write SP
-                    // SP -> BUSA -> ADDR, IMM -> BUSB [7:0]-> DATAIN, write data, SP -> BUSA -> ALUA, 16'hffff -> ALUB, ALU-OUT -> REG-IN, write SP
+                    // CALL R + C
+                    // PC -> BUSB -> REG-IN, write R15
+                    // R1 -> BUSA -> ALUA, IMM -> ALUB, ALUOUT -> REGIN, write PC
                     case(insn_cycle)
                         8'b100   : insn_cycle = 8'b10001;
                         8'b10001 : insn_cycle = 8'b10010;
@@ -383,24 +383,20 @@ module cpu_ctl(
                 immediate = insn[23:8];
             end
             8'b10001 : begin
-                // SP -> BUSA -> ADDR, IMM -> BUSB [15:8]-> DATAIN, write data, SP -> BUSA -> ALUA, 16'hffff -> ALUB, ALU-OUT -> REG-IN, write SP
-                write_en = 16'b10;
-                data_write_en = 1'b1;
-                alu_op = 3'b000;
-                output_en = 48'b1000;
-                ctl_out = 11'b10110011001;
-                immediate = insn[23:8];
-                immediate2 = 16'hffff;
+                // PC -> BUSB -> REG-IN, write R15
+                write_en = 16'h8000;
+                data_write_en = 1'b0;
+                output_en = 48'b10;
+                ctl_out = 11'b00001000000;
             end
             8'b10010 : begin
-                // SP -> BUSA -> ADDR, IMM -> BUSB [7:0]-> DATAIN, write data, SP -> BUSA -> ALUA, 16'hffff -> ALUB, ALU-OUT -> REG-IN, write SP
-                write_en = 16'b10;
-                data_write_en = 1'b1;
+                // R1 -> BUSA -> ALUA, IMM -> ALUB, ALUOUT -> REGIN, write PC
+                write_en = 16'b1;
+                data_write_en = 1'b0;
                 alu_op = 3'b000;
-                output_en = 48'b1000;
-                ctl_out = 11'b01110011001;
+                output_en = out_1;
+                ctl_out = 11'b00010000101;
                 immediate = insn[23:8];
-                immediate2 = 16'hffff;
             end
             8'b10011 : begin
                 // R1 -> BUSA -> ALUA, IMM -> ALUB, ALUOUT -> REGIN, write R1
