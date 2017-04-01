@@ -64,3 +64,14 @@ NET "io_outputs[28]" LOC = P104;
 NET "io_outputs[29]" LOC = P50;
 NET "io_outputs[30]" LOC = P43;
 NET "io_outputs[31]" LOC = P47;
+
+
+NET "uart_rx" LOC = P85;
+NET "uart_tx" LOC = P84;
+
+# PlanAhead Generated IO constraints 
+
+NET "reset_in" PULLUP;
+NET "io_inputs[0]" PULLUP;
+NET "io_inputs[1]" PULLUP;
+NET "io_inputs[2]" PULLUP;

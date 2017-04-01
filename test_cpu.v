@@ -26,16 +26,20 @@ module test_cpu;
 
 	// Inputs
 	reg [31:0] io_inputs;
+    reg uart_rx;
 	reg clk_in;
 	reg reset_in;
 
 	// Outputs
 	wire [31:0] io_outputs;
+    wire uart_tx;
 
 	// Instantiate the Unit Under Test (UUT)
 	cpu uut (
 		.io_outputs(io_outputs), 
+        .uart_tx(uart_tx), 
 		.io_inputs(io_inputs), 
+        .uart_rx(uart_rx), 
 		.clk_in(clk_in), 
 		.reset_in(reset_in)
 	);
@@ -43,8 +47,9 @@ module test_cpu;
 	initial begin
 		// Initialize Inputs
 		io_inputs = 0;
+        uart_rx = 1;
 		clk_in = 0;
-		reset_in = 0;
+		reset_in = 1;
 
 		// Wait 100 ns for global reset to finish
 		#100;
@@ -55,6 +60,8 @@ module test_cpu;
             clk_in = 1;
             #10;
             clk_in = 0;
+            
+            uart_rx = uart_tx;
         end
 	end
       

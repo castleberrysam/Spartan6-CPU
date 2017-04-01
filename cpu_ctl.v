@@ -20,14 +20,16 @@
 //////////////////////////////////////////////////////////////////////////////////
 module cpu_ctl(
     output reg data_write_en,
-    output reg [2:0] alu_op,
+    output reg [3:0] alu_op,
     output [3:0] alu_logic_func,
+    output reg alu_cin,
     output reg [10:0] ctl_out,
     output reg [15:0] immediate,
     output reg [15:0] immediate2,
     output reg [15:0] write_en,
     output reg [47:0] output_en,
     input [7:0] data_in,
+    input alu_cout,
     input clk,
     input reset
     );
@@ -35,6 +37,7 @@ module cpu_ctl(
     reg [31:0] insn;
     reg [15:0] mem_read_scratch;
     reg [7:0] insn_cycle;
+    reg carry;
     
     assign alu_logic_func = insn[11:8];
     
@@ -82,6 +85,7 @@ module cpu_ctl(
             insn = 32'b0;
             insn_cycle = 8'b0;
             mem_read_scratch = 16'b0;
+            carry = 1'b0;
         end else case(insn_cycle)
             8'b00 : begin
                 insn[7:0] = data_in;
@@ -137,23 +141,29 @@ module cpu_ctl(
                     endcase
                 end
                 4'b0011 : begin
-                    // ADD R1, R2
+                    // ADD[C] R1, R2
                     // R1 -> BUSA -> ALUA, R2 -> BUSB -> ALUB, ALUOUT -> REGIN, write R1
                     case(insn_cycle)
                         8'b100  : insn_cycle = 8'b1011;
-                        default : insn_cycle = 8'b00;
+                        default : begin
+                            carry = alu_cout;
+                            insn_cycle = 8'b00;
+                        end
                     endcase
                 end
                 4'b0100 : begin
-                    // SUB R1, R2
+                    // SUB[C] R1, R2
                     // R1 -> BUSA -> ALUA, R2 -> BUSB -> ALUB, ALUOUT -> REGIN, write R1
                     case(insn_cycle)
                         8'b100  : insn_cycle = 8'b1100;
-                        default : insn_cycle = 8'b00;
+                        default : begin
+                            carry = alu_cout;
+                            insn_cycle = 8'b00;
+                        end
                     endcase
                 end
                 4'b0101 : begin
-                    // ROT R1, R2
+                    // ROT[C] R1, R2
                     // R1 -> BUSA -> ALUA, R2 -> BUSB -> ALUB, ALUOUT -> REGIN, write R1
                     case(insn_cycle)
                         8'b100  : insn_cycle = 8'b1101;
@@ -161,7 +171,7 @@ module cpu_ctl(
                     endcase
                 end
                 4'b0110 : begin
-                    // ROT R, C
+                    // ROT[C] R, C
                     // R1 -> BUSA -> ALUA, IMM -> ALUB, ALUOUT -> REGIN, write R
                     case(insn_cycle)
                         8'b100  : insn_cycle = 8'b1110;
@@ -262,7 +272,8 @@ module cpu_ctl(
         if(reset) begin
             write_en = 16'b0;
             data_write_en = 1'b0;
-            alu_op = 3'b0;
+            alu_op = 4'b0;
+            alu_cin = 1'b0;
             output_en = 48'b0;
             ctl_out = 11'b0;
             immediate = 16'b0;
@@ -273,7 +284,8 @@ module cpu_ctl(
                 // PC -> BUSA -> ADDR, PC -> BUSA -> ALUA, 16'b1 -> ALUB, ALU-OUT -> REG-IN, write PC
                 write_en = 16'b1;
                 data_write_en = 1'b0;
-                alu_op = 3'b000;
+                alu_op = 4'b000;
+                alu_cin = 1'b0;
                 output_en = 48'b1;
                 ctl_out = 11'b00010010101;
                 immediate = 16'b1;
@@ -286,7 +298,8 @@ module cpu_ctl(
                 // SP -> BUSA -> ALUA, 16'hffff -> ALUB, ALU-OUT -> ADDR, R -> BUSB [7:0]-> DATAIN, write data
                 write_en = 16'b0;
                 data_write_en = 1'b1;
-                alu_op = 3'b000;
+                alu_op = 4'b000;
+                alu_cin = 1'b0;
                 output_en = 48'b1000 | (out_1 << 1);
                 ctl_out = 11'b01000100101;
                 immediate = 16'hffff;
@@ -295,7 +308,8 @@ module cpu_ctl(
                 // SP -> BUSA -> ALUA, 16'hfffe -> ALUB, ALU-OUT -> REG-IN, write SP, SP -> BUSA -> ADDR, R -> BUSB [15:8]-> DATAIN, write data
                 write_en = 16'b10;
                 data_write_en = 1'b1;
-                alu_op = 3'b000;
+                alu_op = 4'b000;
+                alu_cin = 1'b0;
                 output_en = 48'b1000 | (out_1 << 1);
                 ctl_out = 11'b10010010101;
                 immediate = 16'hfffe;
@@ -304,7 +318,8 @@ module cpu_ctl(
                 // SP -> BUSA -> ADDR, DATAOUT -> CTLIN, SP -> BUSA -> ALUA, 16'b1 -> ALUB, ALU-OUT -> REG-IN, write SP
                 write_en = 16'b10;
                 data_write_en = 1'b0;
-                alu_op = 3'b000;
+                alu_op = 4'b000;
+                alu_cin = 1'b0;
                 output_en = 48'b1000;
                 ctl_out = 11'b00010011001;
                 immediate2 = 16'b1;
@@ -313,7 +328,8 @@ module cpu_ctl(
                 // SP -> BUSA -> ADDR, DATAOUT -> CTLIN, SP -> BUSA -> ALUA, 16'b1 -> ALUB, ALU-OUT -> REG-IN, write SP
                 write_en = 16'b10;
                 data_write_en = 1'b0;
-                alu_op = 3'b000;
+                alu_op = 4'b000;
+                alu_cin = 1'b0;
                 output_en = 48'b1000;
                 ctl_out = 11'b00010011001;
                 immediate2 = 16'b1;
@@ -329,7 +345,7 @@ module cpu_ctl(
                 // R1 -> BUSA -> ALUA, R2 -> BUSB -> ALUB, ALUOUT -> REGIN, write R1
                 write_en = reg_1;
                 data_write_en = 1'b0;
-                alu_op = 3'b100;
+                alu_op = 4'b100;
                 output_en = out_1 | (out_2 << 1);
                 ctl_out = 11'b00010000011;
             end
@@ -337,7 +353,8 @@ module cpu_ctl(
                 // R1 -> BUSA -> ALUA, R2 -> BUSB -> ALUB, ALUOUT -> REGIN, write R1
                 write_en = reg_2;
                 data_write_en = 1'b0;
-                alu_op = 3'b000;
+                alu_op = 4'b000;
+                alu_cin = insn[3] ? carry : 1'b0;
                 output_en = out_2 | (out_3 << 1);
                 ctl_out = 11'b00010000011;
             end
@@ -345,7 +362,8 @@ module cpu_ctl(
                 // R1 -> BUSA -> ALUA, R2 -> BUSB -> ALUB, ALUOUT -> REGIN, write R1
                 write_en = reg_2;
                 data_write_en = 1'b0;
-                alu_op = 3'b010;
+                alu_op = 4'b010;
+                alu_cin = insn[3] ? carry : 1'b1;
                 output_en = out_2 | (out_3 << 1);
                 ctl_out = 11'b00010000011;
             end
@@ -353,7 +371,8 @@ module cpu_ctl(
                 // R1 -> BUSA -> ALUA, R2 -> BUSB -> ALUB, ALUOUT -> REGIN, write R1
                 write_en = reg_2;
                 data_write_en = 1'b0;
-                alu_op = 3'b011;
+                alu_op = insn[3] ? 4'b001 : 4'b011;
+                alu_cin = carry;
                 output_en = out_2 | (out_3 << 1);
                 ctl_out = 11'b00010000011;
             end
@@ -361,7 +380,8 @@ module cpu_ctl(
                 // R1 -> BUSA -> ALUA, IMM -> ALUB, ALUOUT -> REGIN, write R
                 write_en = reg_1;
                 data_write_en = 1'b0;
-                alu_op = 3'b011;
+                alu_op = insn[3] ? 4'b001 : 4'b011;
+                alu_cin = carry;
                 output_en = out_1;
                 ctl_out = 11'b00010000101;
                 immediate = insn[11:8];
@@ -370,7 +390,8 @@ module cpu_ctl(
                 // R1 -> BUSA -> ALUA, IMM -> ALUB, ALUOUT -> REGIN, write R
                 write_en = reg_1;
                 data_write_en = 1'b0;
-                alu_op = 3'b000;
+                alu_op = 4'b000;
+                alu_cin = 1'b0;
                 output_en = out_1;
                 ctl_out = 11'b00010000101;
                 immediate = insn[23:8];
@@ -393,7 +414,8 @@ module cpu_ctl(
                 // R1 -> BUSA -> ALUA, IMM -> ALUB, ALUOUT -> REGIN, write PC
                 write_en = 16'b1;
                 data_write_en = 1'b0;
-                alu_op = 3'b000;
+                alu_op = 4'b000;
+                alu_cin = 1'b0;
                 output_en = out_1;
                 ctl_out = 11'b00010000101;
                 immediate = insn[23:8];
@@ -402,7 +424,7 @@ module cpu_ctl(
                 // R1 -> BUSA -> ALUA, IMM -> ALUB, ALUOUT -> REGIN, write R1
                 write_en = reg_2;
                 data_write_en = 1'b0;
-                alu_op = 3'b100;
+                alu_op = 4'b100;
                 output_en = out_2;
                 ctl_out = 11'b00010000101;
                 immediate = insn[31:16];
@@ -411,7 +433,7 @@ module cpu_ctl(
                 // R1 -> BUSC -> ALUC, R2 -> BUSA -> ALUA, IMM -> ALUB, ALUOUT -> REGIN, write PC
                 write_en = 16'b1;
                 data_write_en = 1'b0;
-                alu_op = 3'b101;
+                alu_op = 4'b101;
                 output_en = (out_2 << 2) | out_3;
                 ctl_out = 11'b00010000101;
                 immediate = insn[31:16];
@@ -420,7 +442,7 @@ module cpu_ctl(
                 // R1 -> BUSC -> ALUC, R2 -> BUSA -> ALUA, IMM -> ALUB, ALUOUT -> REGIN, write PC
                 write_en = 16'b1;
                 data_write_en = 1'b0;
-                alu_op = 3'b110;
+                alu_op = 4'b110;
                 output_en = (out_2 << 2) | out_3;
                 ctl_out = 11'b00010000101;
                 immediate = insn[31:16];
@@ -429,7 +451,7 @@ module cpu_ctl(
                 // R1 -> BUSB -> ALUC, R2 -> BUSA -> ALUA, IMM -> ALUB, ALUOUT -> REGIN, write PC
                 write_en = 16'b1;
                 data_write_en = 1'b0;
-                alu_op = 3'b111;
+                alu_op = 4'b111;
                 output_en = (out_2 << 2) | out_3;
                 ctl_out = 11'b00010000101;
                 immediate = insn[31:16];
@@ -438,7 +460,8 @@ module cpu_ctl(
                 // R2 -> BUSA -> ALUA, IMM -> ALUB, ALUOUT -> ADDR, DATAOUT -> CTLIN
                 write_en = 16'b0;
                 data_write_en = 1'b0;
-                alu_op = 3'b000;
+                alu_op = 4'b000;
+                alu_cin = 1'b0;
                 output_en = out_3;
                 ctl_out = 11'b00000101001;
                 immediate2 = insn[31:16];
@@ -447,7 +470,8 @@ module cpu_ctl(
                 // R2 -> BUSA -> ALUA, IMM -> ALUB, ALUOUT -> ADDR, DATAOUT -> CTLIN
                 write_en = 16'b0;
                 data_write_en = 1'b0;
-                alu_op = 3'b001;
+                alu_op = 4'b000;
+                alu_cin = 1'b1;
                 output_en = out_3;
                 ctl_out = 11'b00000101001;
                 immediate2 = insn[31:16];
@@ -463,7 +487,8 @@ module cpu_ctl(
                 // R1 -> BUSA -> ALUA, IMM -> ALUB, ALUOUT -> ADDR, R2 -> BUSB [7:0]-> DATAIN, write data
                 write_en = 16'b0;
                 data_write_en = 1'b1;
-                alu_op = 3'b000;
+                alu_op = 4'b000;
+                alu_cin = 1'b0;
                 output_en = out_2 | (out_3 << 1);
                 ctl_out = 11'b01000100101;
                 immediate = insn[31:16];
@@ -472,7 +497,8 @@ module cpu_ctl(
                 // R1 -> BUSA -> ALUA, IMM -> ALUB, ALUOUT -> ADDR, R2 -> BUSB [15:8]-> DATAIN, write data
                 write_en = 16'b0;
                 data_write_en = 1'b1;
-                alu_op = 3'b001;
+                alu_op = 4'b000;
+                alu_cin = 1'b1;
                 output_en = out_2 | (out_3 << 1);
                 ctl_out = 11'b10000100101;
                 immediate = insn[31:16];

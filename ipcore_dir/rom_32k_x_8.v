@@ -76,7 +76,7 @@ output [7 : 0] douta;
     .C_HAS_RSTB(0),
     .C_HAS_SOFTECC_INPUT_REGS_A(0),
     .C_HAS_SOFTECC_OUTPUT_REGS_B(0),
-    .C_INIT_FILE("DefaultString"),
+    .C_INIT_FILE("BlankString"),
     .C_INIT_FILE_NAME("ipcore_dir/rom_32k_x_8.mif"),
     .C_INITA_VAL("0"),
     .C_INITB_VAL("0"),
